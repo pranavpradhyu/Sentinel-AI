@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>SentinelAI — AI Network Threat Detection</title>
+  <meta name="description" content="AI-powered intrusion detection: classifies network flows into attack families and flags novel zero-day behaviour, with an explanation for every verdict." />
+  <meta name="theme-color" content="#0b1120" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/static/icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+      </span>
+      <div>
+        <h1>SentinelAI</h1>
+        <div class="sub">Network threat detection</div>
+      </div>
+    </div>
+    <div class="stats" id="topStats"></div>
+    <div class="live"><span class="dot"></span><span id="liveLabel">connecting…</span></div>
+  </header>
+
+  <main class="wrap">
+    <!-- STATUS / HERO -->
+    <section class="card" id="status-card">
+      <div class="status-head">
+        <h2 class="section-title">System status</h2>
+        <span class="section-title mono" id="clock"></span>
+      </div>
+
+      <div class="verdict-hero">
+        <div class="gauge">
+          <svg width="132" height="132" viewBox="0 0 132 132">
+            <circle class="g-track" cx="66" cy="66" r="56" fill="none" stroke-width="10" />
+            <circle class="g-val" id="gaugeVal" cx="66" cy="66" r="56" fill="none" stroke-width="10"
+              stroke-linecap="round" stroke-dasharray="351.9" stroke-dashoffset="351.9" />
+          </svg>
+          <div class="g-label">
+            <div class="g-num" id="gaugeNum">0</div>
+            <div class="g-cap">threat index</div>
+          </div>
+        </div>
+        <div class="verdict-copy">
+          <div class="state sv-clear" id="stateText">Monitoring</div>
+          <div class="desc" id="stateDesc">Streaming live network flows through the detection engine.</div>
+          <div class="meter" id="meter"></div>
+        </div>
+      </div>
+
+      <div class="detect-bar">
+        <div class="control-group" role="group" aria-label="Detection engine">
+          <span class="cg-label">Anomaly engine</span>
+          <div class="segmented" id="engineSeg">
+            <button data-engine="isolation_forest" class="on">Isolation Forest</button>
+            <button data-engine="autoencoder">Autoencoder</button>
+            <button data-engine="both">Both</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <span class="cg-label">Sensitivity <span class="mono" id="sensVal">1.0×</span></span>
+          <input type="range" id="sensRange" min="0.5" max="1.5" step="0.1" value="1.0" />
+        </div>
+      </div>
+
+      <div class="feed-head">
+        <h2 class="section-title">Live flow feed</h2>
+        <div class="controls">
+          <button class="chip-btn on" id="toggleStream">⏸ Pause</button>
+          <button class="chip-btn" id="stepBtn">Step</button>
+        </div>
+      </div>
+      <div class="feed" id="feed" aria-live="polite"></div>
+    </section>
+
+    <!-- INTEL -->
+    <aside class="card" id="intel-card">
+      <h2 class="section-title">Model intelligence</h2>
+
+      <div class="intel-block">
+        <div class="metric-grid" id="metrics"></div>
+      </div>
+
+      <div class="intel-block">
+        <h3 class="section-title">Signals that drive detection</h3>
+        <div class="bars" id="importanceBars"></div>
+      </div>
+
+      <div class="intel-block">
+        <h3 class="section-title">Anomaly engines · zero-day recall</h3>
+        <div id="engineCompare"></div>
+      </div>
+
+      <div class="intel-block">
+        <h3 class="section-title">Where the model confuses classes</h3>
+        <div class="matrix" id="matrix"></div>
+      </div>
+    </aside>
+
+    <!-- WORKSPACE -->
+    <section class="card" id="work-card">
+      <div class="tabs">
+        <button class="tab on" data-pane="inspect">Inspect a flow</button>
+        <button class="tab" data-pane="play">Playground</button>
+        <button class="tab" data-pane="batch">Analyze a capture</button>
+      </div>
+
+      <div class="pane on" id="pane-inspect">
+        <div class="inspector-empty" id="inspectEmpty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <div>Tap any flow in the live feed to see the verdict and the exact features that drove it.</div>
+        </div>
+        <div id="inspectBody" style="display:none"></div>
+      </div>
+
+      <!-- interactive playground -->
+      <div class="pane" id="pane-play">
+        <p class="explain-title">Shape a network flow and watch the engine re-classify it live. Start from a preset, then move the controls.</p>
+        <div class="presets" id="presets">
+          <button data-preset="normal" class="chip-btn on">Normal web</button>
+          <button data-preset="scan" class="chip-btn">Port scan</button>
+          <button data-preset="flood" class="chip-btn">SYN flood</button>
+          <button data-preset="r2l" class="chip-btn">Password guess</button>
+        </div>
+        <div class="play-grid">
+          <div class="play-controls" id="playControls"></div>
+          <div class="play-out" id="playOut"></div>
+        </div>
+      </div>
+
+      <!-- batch / pcap -->
+      <div class="pane" id="pane-batch">
+        <div class="segmented small" id="sourceSeg">
+          <button data-src="csv" class="on">CSV of flows</button>
+          <button data-src="pcap">Raw .pcap capture</button>
+        </div>
+        <label class="drop" id="drop">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+          <div class="big" id="dropTitle">Drop a CSV of flows, or tap to choose</div>
+          <div class="small" id="dropHint">NSL-KDD format · first 5,000 flows scored · nothing leaves the request</div>
+          <input type="file" id="fileInput" accept=".csv,.txt" />
+        </label>
+        <div id="batchResult"></div>
+      </div>
+    </section>
+  </main>
+
+  <p class="foot">
+    SentinelAI · XGBoost attack classifier + Isolation Forest anomaly engine, trained on NSL-KDD.
+    Built by <a href="https://github.com/pranavpradhyu" target="_blank" rel="noopener">Pranav</a>.
+  </p>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+{
+  "classes": [
+    "Normal",
+    "DoS",
+    "Probe",
+    "R2L",
+    "U2R"
+  ],
+  "family_desc": {
+    "Normal": "Legitimate, expected traffic.",
+    "DoS": "Denial of Service - floods a host to exhaust its resources.",
+    "Probe": "Reconnaissance - scans ports and services to map targets.",
+    "R2L": "Remote-to-Local - unauthorised access from a remote machine.",
+    "U2R": "User-to-Root - privilege escalation to superuser."
+  },
+  "features": [
+    "duration",
+    "protocol_type",
+    "service",
+    "flag",
+    "src_bytes",
+    "dst_bytes",
+    "land",
+    "wrong_fragment",
+    "urgent",
+    "hot",
+    "num_failed_logins",
+    "logged_in",
+    "num_compromised",
+    "root_shell",
+    "su_attempted",
+    "num_root",
+    "num_file_creations",
+    "num_shells",
+    "num_access_files",
+    "num_outbound_cmds",
+    "is_host_login",
+    "is_guest_login",
+    "count",
+    "srv_count",
+    "serror_rate",
+    "srv_serror_rate",
+    "rerror_rate",
+    "srv_rerror_rate",
+    "same_srv_rate",
+    "diff_srv_rate",
+    "srv_diff_host_rate",
+    "dst_host_count",
+    "dst_host_srv_count",
+    "dst_host_same_srv_rate",
+    "dst_host_diff_srv_rate",
+    "dst_host_same_src_port_rate",
+    "dst_host_srv_diff_host_rate",
+    "dst_host_serror_rate",
+    "dst_host_srv_serror_rate",
+    "dst_host_rerror_rate",
+    "dst_host_srv_rerror_rate"
+  ],
+  "categorical": [
+    "protocol_type",
+    "service",
+    "flag"
+  ],
+  "numeric": [
+    "duration",
+    "src_bytes",
+    "dst_bytes",
+    "land",
+    "wrong_fragment",
+    "urgent",
+    "hot",
+    "num_failed_logins",
+    "logged_in",
+    "num_compromised",
+    "root_shell",
+    "su_attempted",
+    "num_root",
+    "num_file_creations",
+    "num_shells",
+    "num_access_files",
+    "num_outbound_cmds",
+    "is_host_login",
+    "is_guest_login",
+    "count",
+    "srv_count",
+    "serror_rate",
+    "srv_serror_rate",
+    "rerror_rate",
+    "srv_rerror_rate",
+    "same_srv_rate",
+    "diff_srv_rate",
+    "srv_diff_host_rate",
+    "dst_host_count",
+    "dst_host_srv_count",
+    "dst_host_same_srv_rate",
+    "dst_host_diff_srv_rate",
+    "dst_host_same_src_port_rate",
+    "dst_host_srv_diff_host_rate",
+    "dst_host_serror_rate",
+    "dst_host_srv_serror_rate",
+    "dst_host_rerror_rate",
+    "dst_host_srv_rerror_rate"
+  ],
+  "metrics": {
+    "accuracy": 0.7782,
+    "macro_f1": 0.5844,
+    "attack_roc_auc": 0.9632,
+    "detection_rate": 0.6546,
+    "false_alarm_rate": 0.0284,
+    "anomaly_catch_rate": 0.5973,
+    "deep_anomaly_catch_rate": 0.5376,
+    "combined_anomaly_catch_rate": 0.6676,
+    "train_size": 125973,
+    "test_size": 22544
+  },
+  "anomaly_engines": {
+    "isolation_forest": {
+      "catch_rate": 0.5973,
+      "benign_flag_rate": 0.0194,
+      "kind": "tree ensemble"
+    },
+    "autoencoder": {
+      "catch_rate": 0.5376,
+      "benign_flag_rate": 0.0171,
+      "kind": "bottleneck neural net (96-32-8-32-96)",
+      "epochs": 9
+    }
+  },
+  "confusion_matrix": [
+    [
+      9435,
+      67,
+      205,
+      2,
+      2
+    ],
+    [
+      1064,
+      6280,
+      116,
+      0,
+      0
+    ],
+    [
+      637,
+      165,
+      1619,
+      0,
+      0
+    ],
+    [
+      2683,
+      0,
+      4,
+      193,
+      5
+    ],
+    [
+      48,
+      0,
+      0,
+      3,
+      16
+    ]
+  ],
+  "top_features": [
+    {
+      "feature": "service",
+      "importance": 0.4843
+    },
+    {
+      "feature": "flag",
+      "importance": 0.1167
+    },
+    {
+      "feature": "root_shell",
+      "importance": 0.0973
+    },
+    {
+      "feature": "dst_host_serror_rate",
+      "importance": 0.0402
+    },
+    {
+      "feature": "num_failed_logins",
+      "importance": 0.0348
+    },
+    {
+      "feature": "is_guest_login",
+      "importance": 0.0254
+    },
+    {
+      "feature": "count",
+      "importance": 0.022
+    },
+    {
+      "feature": "protocol_type",
+      "importance": 0.02
+    },
+    {
+      "feature": "num_file_creations",
+      "importance": 0.0159
+    },
+    {
+      "feature": "wrong_fragment",
+      "importance": 0.0146
+    },
+    {
+      "feature": "dst_host_srv_count",
+      "importance": 0.0146
+    },
+    {
+      "feature": "dst_bytes",
+      "importance": 0.0111
+    },
+    {
+      "feature": "dst_host_diff_srv_rate",
+      "importance": 0.0106
+    },
+    {
+      "feature": "src_bytes",
+      "importance": 0.0098
+    },
+    {
+      "feature": "logged_in",
+      "importance": 0.0085
+    }
+  ],
+  "trained_at": "2026-09-30 18:20 UTC"
+}
