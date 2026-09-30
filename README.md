@@ -1,5 +1,16 @@
 # SentinelAI — AI-Powered Network Threat Detection
 
+[![Live demo](https://img.shields.io/badge/live%20demo-Render-46E3B7?logo=render&logoColor=white)](https://sentinel-ai-0wki.onrender.com)
+![Python](https://img.shields.io/badge/python-3.12-3776AB?logo=python&logoColor=white)
+![XGBoost](https://img.shields.io/badge/XGBoost-classifier-EB5E28)
+![Flask](https://img.shields.io/badge/Flask-API-000000?logo=flask&logoColor=white)
+![PWA](https://img.shields.io/badge/PWA-installable-5A0FC8)
+
+### 🔗 Live demo: **[https://sentinel-ai-0wki.onrender.com](https://sentinel-ai-0wki.onrender.com)**
+
+> The demo runs on Render's free tier, so it sleeps after ~15 minutes idle.
+> If the page doesn't load straight away, give it 30–60 seconds to wake up.
+
 An end-to-end intrusion detection platform. It reads network-flow records,
 classifies each one into an attack family, and independently flags flows that
 look *nothing like* normal traffic — the signature of a novel, never-before-seen
@@ -12,9 +23,20 @@ Built as a single deployable web app with a mobile-installable (PWA) dashboard.
                  ┌─────────────────────────────────────────┐
    network flow →│  XGBoost classifier   → attack family    │→ verdict
                  │  Isolation Forest      → strangeness score│→ zero-day flag
+                 │  Deep autoencoder      → reconstruction err│→ zero-day flag
                  │  pred_contribs (SHAP)  → per-feature "why" │→ explanation
                  └─────────────────────────────────────────┘
 ```
+
+---
+
+## Try it in 60 seconds
+
+1. Open the **[live demo](https://sentinel-ai-0wki.onrender.com)** and watch real held-out flows stream through the engine.
+2. Click any row to see *why* the model reached its verdict.
+3. Open the **Playground** tab, load the *SYN flood* preset, and move the sliders.
+4. Switch the anomaly engine (Isolation Forest / Autoencoder / Both) and compare scores.
+5. In **Analyze a capture**, upload `samples/sample_capture.pcap` to see raw packets become flows.
 
 ---
 
@@ -111,6 +133,11 @@ or create a Web Service manually with:
 - **Start:** `gunicorn backend.app:app --workers 1 --threads 4 --timeout 120 --bind 0.0.0.0:$PORT`
 
 The trained artifacts are committed, so no training runs on the server.
+
+**Note on library versions:** model files are pickled, so `scikit-learn` and
+`xgboost` in `requirements.txt` are pinned to the versions that trained them.
+If you retrain locally (`python model/train.py`), update those two pins to match
+your environment before redeploying.
 
 ## Install on mobile
 
